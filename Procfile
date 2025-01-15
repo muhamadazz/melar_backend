@@ -1,1 +1,2 @@
-echo "web: gunicorn melar_project.wsgi:application" > Procfile
+web: gunicorn melar_project.wsgi --log-file -
+web : python manage.py migrate && gunicorn melar_project.wsgi
