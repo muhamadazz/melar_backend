@@ -6,9 +6,64 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomUserSerializer, ChangePasswordSerializer
 from django.conf import settings
 
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
+
 class RegisterView(APIView):
     """Handle user registration and return relevant feedback."""
     permission_classes = [permissions.AllowAny]
+    
+    @swagger_auto_schema(
+        operation_description="Register a new user with email, username, phone number, full name, and password.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'email': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_EMAIL, description="User's email (must be unique)."),
+                'username': openapi.Schema(type=openapi.TYPE_STRING, description="Unique username for the user."),
+                'phone_number': openapi.Schema(type=openapi.TYPE_STRING, description="User's phone number (must be unique)."),
+                'full_name': openapi.Schema(type=openapi.TYPE_STRING, description="User's full name."),
+                'password': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_PASSWORD, description="Password for authentication."),
+                'role': openapi.Schema(type=openapi.TYPE_STRING, enum=['admin', 'user'], description="User role (default: 'user')."),
+                'is_seller': openapi.Schema(type=openapi.TYPE_BOOLEAN, description="Boolean indicating if the user is a seller (default: False)."),
+            },
+            required=['email', 'username', 'phone_number', 'full_name', 'password']
+        ),
+        responses={
+            201: openapi.Response(
+                description="User registered successfully.",
+                examples={
+                    "application/json": {
+                        "message": "User registered successfully.",
+                        "user": {
+                            "id": 1,
+                            "email": "user@example.com",
+                            "username": "newuser",
+                            "phone_number": "08123456789",
+                            "full_name": "John Doe",
+                            "role": "user",
+                            "is_seller": False,
+                            "is_active": True,
+                            "created_at": "2025-03-19T12:00:00Z",
+                            "updated_at": "2025-03-19T12:00:00Z"
+                        }
+                    }
+                }
+            ),
+            400: openapi.Response(
+                description="Registration failed due to validation errors.",
+                examples={
+                    "application/json": {
+                        "message": "Registration failed. Please check the provided data.",
+                        "errors": {
+                            "email": ["This field must be unique."],
+                            "phone_number": ["This field must be unique."]
+                        }
+                    }
+                }
+            ),
+        }
+    )
 
     def post(self, request):
         serializer = CustomUserSerializer(data=request.data)
