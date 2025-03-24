@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Beranda - MelarApp{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <img src="{{ product.image.url|default:'https://via.placeholder.com/200x180' }}" class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body">
+                    <p class="product-title">{{ product.name }}</p>
+                    <p class="product-price">Rp{{ product.price|floatformat:0 }} / hari</p>
+
+                    <!-- Status Ketersediaan -->
+                    {% if product.availability_status == 'available' %}
+                        <span class="badge bg-success">Tersedia</span>
+                    {% elif product.availability_status == 'rented' %}
+                        <span class="badge bg-warning text-dark">Disewa</span>
+                    {% else %}
+                        <span class="badge bg-danger">Tidak Tersedia</span>
+                    {% endif %}
+
+                    <!-- Kategori Produk -->
+                    <p class="product-categories">
+                        Kategori: 
+                        {% for category in product.categories.all %}
+                            {{ category.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+
+                    <!-- Tombol Menuju Halaman Detail Produk -->
+                    <a href="{% url 'product_detail' product.id %}" class="btn btn-primary btn-sm">Lihat Detail</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Tidak ada produk yang tersedia.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

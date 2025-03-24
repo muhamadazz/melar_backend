@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from cloudinary.models import CloudinaryField
 
 class Shop(models.Model):
     user = models.ForeignKey(
@@ -50,6 +51,7 @@ class Product(models.Model):
     availability_status = models.CharField(max_length=20, choices=AVAILABILITY_CHOICES, default='available')
     categories = models.ManyToManyField(Category, related_name='products', blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    image = CloudinaryField('image', folder='melar/product_images', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

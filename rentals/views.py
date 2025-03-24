@@ -44,8 +44,6 @@ class CartViewSet(viewsets.ModelViewSet):
     def checkout(self, request):
         borrow_date = request.data.get('borrow_date')
         return_deadline = request.data.get('return_deadline')
-
-        # Ambil semua item di cart milik pengguna
         user_cart_items = Cart.objects.filter(user=request.user)
 
         if not user_cart_items:
@@ -63,11 +61,9 @@ class CartViewSet(viewsets.ModelViewSet):
         if borrow_date >= return_deadline:
             return Response({"detail": "Return deadline must be after borrow date."}, status=400)
 
-        # Hitung total harga berdasarkan item-item di Cart
         total_price = sum(item.product.price * item.quantity for item in user_cart_items)
 
         with transaction.atomic():
-            # Membuat order baru
             order = Order.objects.create(
                 user=request.user,
                 total_price=total_price,
@@ -75,9 +71,7 @@ class CartViewSet(viewsets.ModelViewSet):
                 return_deadline=return_deadline,
             )
 
-            # Menambahkan item-item Cart ke dalam OrderItem
             for cart_item in user_cart_items:
-                # Membuat OrderItem untuk setiap Cart item
                 OrderItem.objects.create(
                     order=order,
                     product=cart_item.product,
@@ -85,7 +79,6 @@ class CartViewSet(viewsets.ModelViewSet):
                     total_price=cart_item.total_price,
                 )
 
-            # Menghapus item Cart setelah berhasil checkout
             user_cart_items.delete()
 
         return Response({
@@ -94,6 +87,57 @@ class CartViewSet(viewsets.ModelViewSet):
             "total_price": total_price
         }, status=status.HTTP_201_CREATED)
 
+    @action(detail=False, methods=['post'])
+    def checkout_selected(self, request):
+        borrow_date = request.data.get('borrow_date')
+        return_deadline = request.data.get('return_deadline')
+        selected_cart_item_ids = request.data.get('cart_item_ids', [])
+
+        if not selected_cart_item_ids:
+            return Response({"detail": "No items selected for checkout."}, status=400)
+
+        user_cart_items = Cart.objects.filter(id__in=selected_cart_item_ids, user=request.user)
+
+        if not user_cart_items:
+            return Response({"detail": "Selected items are not found in your cart."}, status=400)
+
+        if not borrow_date or not return_deadline:
+            return Response({"detail": "Both borrow date and return deadline are required."}, status=400)
+
+        try:
+            borrow_date = datetime.strptime(borrow_date, '%Y-%m-%d').date()
+            return_deadline = datetime.strptime(return_deadline, '%Y-%m-%d').date()
+        except ValueError:
+            return Response({"detail": "Invalid date format. Use YYYY-MM-DD."}, status=400)
+
+        if borrow_date >= return_deadline:
+            return Response({"detail": "Return deadline must be after borrow date."}, status=400)
+
+        total_price = sum(item.product.price * item.quantity for item in user_cart_items)
+
+        with transaction.atomic():
+            order = Order.objects.create(
+                user=request.user,
+                total_price=total_price,
+                borrow_date=borrow_date,
+                return_deadline=return_deadline,
+            )
+
+            for cart_item in user_cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    product=cart_item.product,
+                    quantity=cart_item.quantity,
+                    total_price=cart_item.total_price,
+                )
+
+            user_cart_items.delete()
+
+        return Response({
+            "detail": "Selected items have been checked out successfully.",
+            "order_id": order.id,
+            "total_price": total_price
+        }, status=status.HTTP_201_CREATED)
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
