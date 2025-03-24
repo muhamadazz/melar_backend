@@ -42,7 +42,7 @@
         {% for product in products %}
         <div class="col-md-3 mb-4">
             <div class="card">
-                <img src="https://via.placeholder.com/200x180" class="card-img-top" alt="{{ product.name }}">
+                <img src="{{ product.image.url|default:'https://via.placeholder.com/200x180' }}" class="card-img-top" alt="{{ product.name }}">
                 <div class="card-body">
                     <p class="product-title">{{ product.name }}</p>
                     <p class="product-price">Rp{{ product.price|floatformat:0 }}</p>
