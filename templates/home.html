@@ -45,7 +45,7 @@
                 <img src="{{ product.image.url|default:'https://via.placeholder.com/200x180' }}" class="card-img-top" alt="{{ product.name }}">
                 <div class="card-body">
                     <p class="product-title">{{ product.name }}</p>
-                    <p class="product-price">Rp{{ product.price|floatformat:0 }}</p>
+                    <p class="product-price">Rp{{ product.price|floatformat:0 }} / hari</p>
                     
                     <!-- Status Ketersediaan -->
                     {% if product.availability_status == 'available' %}
