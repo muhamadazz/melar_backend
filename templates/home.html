@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Beranda - MelarApp</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .navbar { background-color: #ffffff; border-bottom: 2px solid #f0f0f0; }
+        .category-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+        .category-bar span { padding: 8px 15px; border-radius: 8px; color: white; font-weight: bold; font-size: 14px; }
+        .status-available { background-color: #4CAF50; padding: 3px 8px; border-radius: 4px; font-size: 12px; color: white; }
+        .status-rented { background-color: #FF9800; padding: 3px 8px; border-radius: 4px; font-size: 12px; color: white; }
+        .status-unavailable { background-color: #F44336; padding: 3px 8px; border-radius: 4px; font-size: 12px; color: white; }
+        .card img { height: 180px; object-fit: cover; }
+        .product-title { font-size: 14px; font-weight: bold; margin-top: 5px; }
+        .product-price { font-size: 16px; color: #d32f2f; font-weight: bold; }
+        .product-categories { font-size: 12px; color: #757575; }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-light">
+    <div class="container">
+        <a class="navbar-brand" href="#" style="color: #4CAF50;"><img src="../static/images/maskot.png" height="35" weight="35" alt="MelarApp">MelarApp</a>
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Cari produk..." aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Cari</button>
+        </form>
+        <div>
+            <a href="#" class="btn btn-success">Masuk</a>
+            <a href="#" class="btn btn-outline-success">Daftar</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Produk -->
+<div class="container mt-4">
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <img src="https://via.placeholder.com/200x180" class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body">
+                    <p class="product-title">{{ product.name }}</p>
+                    <p class="product-price">Rp{{ product.price|floatformat:0 }}</p>
+                    
+                    <!-- Status Ketersediaan -->
+                    {% if product.availability_status == 'available' %}
+                        <span class="status-available">Tersedia</span>
+                    {% elif product.availability_status == 'rented' %}
+                        <span class="status-rented">Disewa</span>
+                    {% else %}
+                        <span class="status-unavailable">Tidak Tersedia</span>
+                    {% endif %}
+
+                    <!-- Kategori Produk -->
+                    <p class="product-categories">
+                        Kategori: 
+                        {% for category in product.categories.all %}
+                            {{ category.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+
+                    <a href="#" class="btn btn-primary btn-sm">Lihat Detail</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Tidak ada produk yang tersedia.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
