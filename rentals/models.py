@@ -27,7 +27,8 @@ class Order(models.Model):
         ('completed', 'Completed'),
     ]
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders', null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='orders')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     borrow_date = models.DateField()
     return_deadline = models.DateField()

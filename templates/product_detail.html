@@ -39,7 +39,8 @@
 
             <!-- Tombol Sewa -->
             <div class="rental-buttons">
-                <button class="btn btn-success w-100">Sewa Sekarang</button>
+                <a href="{% url 'create_order' product.id %}" class="btn btn-primary">Sewa Sekarang</a>
+                <a href="{% url 'home' %}" class="btn btn-secondary">Kembali</a>
             </div>
         </div>
     </div>

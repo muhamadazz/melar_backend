@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from shops.viewset import *
+from rentals.viewset import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +27,7 @@ urlpatterns = [
     path('api/', include('rentals.urls')),
     path('', home, name='home'),
     path('product/<int:product_id>/', product_detail, name='product_detail'),
+    path('order/<int:product_id>/', create_order, name='create_order'),
+    path('order/success/<int:order_id>/', order_success, name='order_success'),
+
 ]

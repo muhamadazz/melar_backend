@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h2>Pemesanan Berhasil!</h2>
+    <p>Order ID: {{ order.id }}</p>
+    <p>Produk: {{ order.product.name }}</p>
+    <p>Total Harga: Rp{{ order.total_price }}</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">Kembali ke Beranda</a>
+</div>
+{% endblock %}

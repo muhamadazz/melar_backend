@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Box Detail Sewa -->
+        <div class="col-md-7">
+            <div class="card p-3 shadow-sm">
+                <h4 class="fw-bold">Keranjang</h4>
+                <hr>
+
+                <!-- List Item -->
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="d-flex align-items-center p-2 border-bottom">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-thumbnail me-3 rounded" width="160">
+
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1 fw-semibold">{{ product.name }}</h6>
+                                <p class="text-muted small mb-1">{{ product.description }}</p>
+
+                                <!-- Input Jumlah -->
+                                <div class="input-group w-50 mb-2">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(-1)">-</button>
+                                    <input type="number" id="quantity" name="quantity" class="form-control text-center" value="1" min="1" style="max-width: 50px;" onchange="updateTotal()">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(1)">+</button>
+                                </div>
+
+                                <p class="fw-bold fs-5 text-success">Rp <span id="product-price" data-price="{{ product.price }}">{{ product.price }}</span>/hari</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ringkasan Sewa -->
+        <div class="col-md-5">
+            <div class="card p-3 shadow-sm">
+                <h5 class="fw-bold">Ringkasan Sewa</h5>
+                <p class="d-flex justify-content-between">
+                    <span>Total:</span> 
+                    <span class="fw-bold">Rp <span id="total-price">{{ product.price }}</span></span>
+                </p>
+
+                <!-- Form Penyewaan -->
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <!-- Hidden Inputs untuk mengirim data -->
+                    <input type="hidden" id="hidden-total-price" name="total_price" value="{{ product.price }}">
+                    <input type="hidden" id="hidden-quantity" name="quantity" value="1">
+
+                    <button type="submit" id="submit-btn" class="btn btn-success w-100">Sewa Sekarang</button>
+                    <p id="date-error" class="text-danger mt-2" style="display: none;">Tanggal kembali harus lebih besar dari tanggal pinjam!</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript untuk Menghitung Total Harga -->
+<script>
+    function changeQuantity(amount) {
+        let quantityInput = document.getElementById("quantity");
+        let newQuantity = parseInt(quantityInput.value) + amount;
+        if (newQuantity >= 1) {
+            quantityInput.value = newQuantity;
+            updateTotal();
+        }
+    }
+
+    function updateTotal() {
+        let priceElement = document.getElementById("product-price");
+        let pricePerDay = parseInt(priceElement.getAttribute("data-price"));
+        let quantity = parseInt(document.getElementById("quantity").value);
+        let borrowDateInput = document.getElementById("borrow_date");
+        let returnDateInput = document.getElementById("return_deadline");
+        let totalPriceElement = document.getElementById("total-price");
+        let hiddenTotalPriceInput = document.getElementById("hidden-total-price");
+        let hiddenQuantityInput = document.getElementById("hidden-quantity");
+        let errorText = document.getElementById("date-error");
+        let submitBtn = document.getElementById("submit-btn");
+
+        let borrowDate = borrowDateInput ? borrowDateInput.value : null;
+        let returnDate = returnDateInput ? returnDateInput.value : null;
+
+        let totalPrice = pricePerDay * quantity; // Default jika hanya 1 hari
+
+        if (borrowDate && returnDate) {
+            let startDate = new Date(borrowDate);
+            let endDate = new Date(returnDate);
+
+            if (endDate > startDate) {
+                let days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // Hitung jumlah hari sewa
+                totalPrice = pricePerDay * quantity * days;
+                errorText.style.display = "none";
+                submitBtn.disabled = false;
+            } else {
+                totalPrice = 0;
+                errorText.style.display = "block";
+                submitBtn.disabled = true;
+            }
+        }
+
+        // Format harga dengan ribuan separator
+        totalPriceElement.innerText = totalPrice.toLocaleString("id-ID");
+        hiddenTotalPriceInput.value = totalPrice;
+        hiddenQuantityInput.value = quantity;
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let quantityInput = document.getElementById("quantity");
+        let borrowDateInput = document.getElementById("borrow_date");
+        let returnDateInput = document.getElementById("return_deadline");
+
+        if (quantityInput) quantityInput.addEventListener("input", updateTotal);
+        if (borrowDateInput) borrowDateInput.addEventListener("input", updateTotal);
+        if (returnDateInput) returnDateInput.addEventListener("input", updateTotal);
+
+        updateTotal();
+    });
+</script>
+{% endblock %}
