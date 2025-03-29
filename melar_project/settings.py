@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-oeo0@g*(o+bv4sy)dz7fvo+q_qd@3*jx-s93h)w3^y%)7)3y)2
 CSRF_TRUSTED_ORIGINS = ["https://melarbackend-production.up.railway.app"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
