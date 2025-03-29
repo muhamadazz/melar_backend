@@ -13,21 +13,7 @@
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-    <div class="container">
-        <a class="navbar-brand fw-bold text-success" href="{% url 'home' %}">
-            <img src="{% static 'images/maskot.png' %}" height="35" weight="35" alt="MelarApp"> MelarApp
-        </a>
-        <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Cari produk..." aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Cari</button>
-        </form>
-        <div>
-            <a href="#" class="btn btn-success">Masuk</a>
-            <a href="#" class="btn btn-outline-success">Daftar</a>
-        </div>
-    </div>
-</nav>
+{% include 'asset/navbar.html' %}
 
 <!-- Konten Utama -->
 <main>

@@ -2,10 +2,46 @@
 
 {% block content %}
 <div class="container text-center mt-5">
-    <h2>Pemesanan Berhasil!</h2>
-    <p>Order ID: {{ order.id }}</p>
-    <p>Produk: {{ order.product.name }}</p>
-    <p>Total Harga: Rp{{ order.total_price }}</p>
-    <a href="{% url 'home' %}" class="btn btn-primary">Kembali ke Beranda</a>
+    <h2 class="text-success">✅ Pemesanan Sewa Barang Berhasil!</h2>
+    
+    <h4 class="mt-4">📌 Detail Sewa:</h4>
+    <table class="table table-bordered mt-3">
+        <tr>
+            <th>Produk</th>
+            <td>{{ order.product.name }}</td>
+        </tr>
+        <tr>
+            <th>Pemilik</th>
+            <td>{{ order.provider }}</td>
+        </tr>
+        <tr>
+            <th>Nomor Telepon Pemilik</th>
+            <td>{{ order.phone_provider }}</td>
+        </tr>
+        <tr>
+            <th>Harga Total</th>
+            <td>Rp{{ order.total_price }}</td>
+        </tr>
+        <tr>
+            <th>Tanggal Mulai Sewa</th>
+            <td>{{ order.borrow_date }}</td>
+        </tr>
+        <tr>
+            <th>Batas Pengembalian</th>
+            <td>{{ order.return_deadline }}</td>
+        </tr>
+    </table>
+    
+    <p class="mt-3 text-muted">
+        Silakan tunggu dihubungi oleh pemilik barang atau bisa menghubungi langsung melalui WhatsApp berikut:
+    </p>
+    
+    <p> 
+        <a href="https://wa.me/{{ order.phone_provider }}" target="_blank" class="btn btn-success">
+            <i class="fab fa-whatsapp"></i> Chat {{ order.provider }} via WhatsApp
+        </a>
+    </p>
+
+    <a href="{% url 'home' %}" class="btn btn-primary mt-4">🏠 Kembali ke Beranda</a>
 </div>
 {% endblock %}

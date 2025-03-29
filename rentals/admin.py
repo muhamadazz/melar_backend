@@ -8,9 +8,19 @@ class CartAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'total_price', 'borrow_date', 'return_deadline', 'status', 'created_at')
-    list_filter = ('status', 'borrow_date', 'return_deadline')
-    search_fields = ('user__username',)
+    list_display = ('id', 'renter', 'phone_renter', 'provider', 'phone_provider', 'product', 'total_price', 'status', 'borrow_date', 'return_deadline', 'created_at')
+    list_filter = ('status', 'borrow_date', 'return_deadline', 'created_at')
+    search_fields = ('renter__username', 'phone_renter', 'provider', 'phone_provider', 'product__name', 'status')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at', 'phone_renter', 'provider', 'phone_provider')
+
+    def save_model(self, request, obj, form, change):
+        if not obj.phone_renter and obj.renter:
+            obj.phone_renter = obj.renter.phone_number
+        if obj.product and obj.product.shop and obj.product.shop.user:
+            obj.provider = obj.product.shop.user.full_name
+            obj.phone_provider = obj.product.shop.user.phone_number
+        super().save_model(request, obj, form, change)
 
 @admin.register(Shipping)
 class ShippingAdmin(admin.ModelAdmin):

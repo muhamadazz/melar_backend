@@ -40,7 +40,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=15, unique=True)  # ✅ Nomor telepon wajib diisi dan unik
+    phone_number = models.CharField(max_length=15)  # ✅ Nomor telepon wajib diisi dan unik
     full_name = models.CharField(max_length=255)
     role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='user')
     is_seller = models.BooleanField(default=False)

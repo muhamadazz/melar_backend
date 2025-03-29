@@ -17,6 +17,7 @@ class Cart(models.Model):
     def __str__(self):
         return f"{self.user.username}'s cart"
 
+
 class Order(models.Model):
     ORDER_STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -27,8 +28,18 @@ class Order(models.Model):
         ('completed', 'Completed'),
     ]
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders', null=True, blank=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='orders')
+    renter = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        related_name='orders', null=True, blank=True
+    )
+    phone_renter = models.CharField(max_length=15, blank=True, null=True)
+
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='orders'
+    )
+    provider = models.CharField(max_length=255, blank=False, null=True)
+    phone_provider = models.CharField(max_length=15, blank=False, null=True)
+
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     borrow_date = models.DateField()
     return_deadline = models.DateField()
@@ -36,8 +47,20 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        if self.renter and not self.phone_renter:
+            self.phone_renter = getattr(self.renter, 'phone_number', None)  # Gunakan getattr untuk menghindari error
+
+
+        if not self.provider and self.product and self.product.shop and self.product.shop.user:
+            self.provider = self.product.shop.user.full_name
+            self.phone_provider = self.product.shop.user.phone_number
+
+        super().save(*args, **kwargs)  # Simpan perubahan ke database
+
+
     def __str__(self):
-        return f"Order {self.id} by {self.user.username}"
+        return f"Order #{self.id} - {self.renter.username if self.renter else 'Unknown'}"
 
 
 

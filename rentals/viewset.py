@@ -5,8 +5,9 @@ from .models import Product, Order  # Pastikan model produk ada
 from .forms import OrderForm
 from django.contrib.auth.decorators import login_required
 from decimal import Decimal
+from django.conf import settings
 
-@login_required
+@login_required(login_url=settings.LOGIN_URL)
 def create_order(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
@@ -15,7 +16,7 @@ def create_order(request, product_id):
         if form.is_valid():
             order = form.save(commit=False)
             order.product = product
-            order.user = request.user  # Sesuai user yang login
+            order.renter = request.user  # Sesuai user yang login
 
             # Ambil data dari form
             borrow_date = form.cleaned_data["borrow_date"]

@@ -55,6 +55,14 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def pemilik_product(self):
+        return self.shop.user.full_name
+
+    @property
+    def nomor_pemilik(self):
+        return self.shop.user.phone_number
+
     def __str__(self):
         return self.name
 

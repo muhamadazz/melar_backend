@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 from shops.viewset import *
 from rentals.viewset import *
+from django.contrib.auth.views import LoginView, LogoutView
+from users.viewset import signup
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,5 +31,7 @@ urlpatterns = [
     path('product/<int:product_id>/', product_detail, name='product_detail'),
     path('order/<int:product_id>/', create_order, name='create_order'),
     path('order/success/<int:order_id>/', order_success, name='order_success'),
-
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
+    path('signup/', signup, name='signup'),
 ]

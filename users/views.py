@@ -6,8 +6,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomUserSerializer, ChangePasswordSerializer
 from django.conf import settings
 
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema # type: ignore
+from drf_yasg import openapi # type: ignore
 
 
 class RegisterView(APIView):
