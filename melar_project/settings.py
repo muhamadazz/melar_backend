@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-oeo0@g*(o+bv4sy)dz7fvo+q_qd@3*jx-s93h)w3^y%)7)3y)2'
-CSRF_TRUSTED_ORIGINS = ["https://melarbackend-production.up.railway.app"]
+CSRF_TRUSTED_ORIGINS = ["https://melarbackend-production.up.railway.app", "https://melar.my.id", "https://www.melar.my.id"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
