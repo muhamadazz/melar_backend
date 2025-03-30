@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Tambah Toko Baru</h2>
+
+    <form method="POST" class="shadow p-4 bg-white rounded">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="shop_name" class="form-label">Nama Toko</label>
+            {{ form.shop_name }}
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Deskripsi</label>
+            {{ form.description }}
+        </div>
+
+        <div class="mb-3">
+            <label for="address" class="form-label">Alamat</label>
+            {{ form.address }}
+        </div>
+
+        <div class="mb-3">
+            <label for="postal_code" class="form-label">Kode Pos</label>
+            {{ form.postal_code }}
+        </div>
+
+        <div class="mb-3">
+            <label for="contact" class="form-label">Kontak</label>
+            {{ form.contact }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Tambah Toko</button>
+        <a href="{% url 'user_shops' %}" class="btn btn-secondary">Batal</a>
+    </form>
+</div>
+{% endblock %}

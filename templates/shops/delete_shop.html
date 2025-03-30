@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Hapus Toko</h2>
+<p>Apakah kamu yakin ingin menghapus toko "{{ shop.name }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Hapus</button>
+</form>
+<a href="{% url 'user_shops' %}">Batal</a>
+{% endblock %}

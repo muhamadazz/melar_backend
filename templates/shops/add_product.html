@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ title }}</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="id_name" class="form-label">Nama Produk</label>
+            {{ form.name }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_description" class="form-label">Deskripsi</label>
+            {{ form.description }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_price" class="form-label">Harga</label>
+            {{ form.price }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_availability_status" class="form-label">Status Ketersediaan</label>
+            {{ form.availability_status }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_status" class="form-label">Status</label>
+            {{ form.status }}
+        </div>
+
+        <!-- Pilih Kategori yang Sudah Ada -->
+        <div class="mb-3">
+            <label for="id_categories" class="form-label">Kategori (Pilih yang sudah ada)</label>
+            {{ form.categories }}
+            <small class="text-muted">Atau tambahkan kategori baru di bawah ini</small>
+        </div>
+
+        <!-- Tambah Kategori Baru -->
+        <div class="mb-3">
+            <label for="new_category" class="form-label">Tambah Kategori Baru</label>
+            <input type="text" name="new_category" id="new_category" class="form-control" placeholder="Isi hanya jika kategori belum tersedia">
+        </div>
+
+        <div class="mb-3">
+            <label for="id_image" class="form-label">Gambar Produk</label>
+            {{ form.image }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        <a href="{% url 'shop_products' shop.id %}" class="btn btn-secondary">Batal</a>
+    </form>
+</div>
+
+{% endblock %}

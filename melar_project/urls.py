@@ -20,6 +20,7 @@ from shops.viewset import *
 from rentals.viewset import *
 from django.contrib.auth.views import LoginView, LogoutView
 from users.viewset import signup
+from shops.viewset import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,4 +35,18 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
     path('signup/', signup, name='signup'),
+    
+    # Shops
+    path('shops/', user_shops, name='user_shops'),
+    path('shops/add/', add_shop, name='add_shop'),
+    path('shops/delete/<int:shop_id>/', delete_shop, name='delete_shop'),
+    path('<int:shop_id>/edit/', edit_shop, name='edit_shop'),
+    path('<int:shop_id>/detail/', shop_detail, name='shop_detail'),
+
+    # Products
+    path('shop/<int:shop_id>/products/', shop_products, name='shop_products'),
+    path('shop/<int:shop_id>/products/add/', add_product, name='add_product'),
+    path('shop/products/edit/<int:product_id>/', edit_product, name='edit_product'),
+    path('shop/products/delete/<int:product_id>/', delete_product, name='delete_product'),
+  
 ]
